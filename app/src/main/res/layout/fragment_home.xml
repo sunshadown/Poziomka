@@ -17,4 +17,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="258dp"
+        android:layout_height="414dp"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="265dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="52dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

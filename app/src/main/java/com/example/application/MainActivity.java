@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.Manifest;
@@ -173,7 +174,15 @@ public class MainActivity extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
+
+            File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "ciasteczko");
+            if (!mediaStorageDir.exists()) {
+                if (!mediaStorageDir.mkdirs()) {
+                    Log.d("App", "failed to create directory");
+                }
+            }
+            final File file = new File(mediaStorageDir, "/pic.jpg");
+
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -213,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
                     super.onCaptureCompleted(session, request, result);
                     Toast.makeText(MainActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
+                    Intent intent = new Intent(getApplicationContext(), Main3Activity.class);
+                    startActivity(intent);
                 }
             };
             cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
