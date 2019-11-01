@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,7 +84,10 @@ public class HomeFragment extends Fragment {
                 input.read(bytes, 0, size);
                 if(isStoragePermissionGranted()){
                     myBitmap = BitmapFactory.decodeFile("/storage/emulated/0/ciasteczko/pic.jpg");
-                    myImage.setImageBitmap(myBitmap);
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(90.0f);
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true);
+                    myImage.setImageBitmap(rotatedBitmap);
                     Toast.makeText(getContext(), "setting bitmap", Toast.LENGTH_LONG).show();
                 }
 
