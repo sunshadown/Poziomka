@@ -7,16 +7,15 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="244dp"
-        android:layout_height="87dp"
+        android:layout_width="257dp"
+        android:layout_height="56dp"
         android:layout_marginStart="83dp"
-        android:layout_marginTop="140dp"
         android:layout_marginEnd="84dp"
-        android:layout_marginBottom="504dp"
+        android:layout_marginBottom="488dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
