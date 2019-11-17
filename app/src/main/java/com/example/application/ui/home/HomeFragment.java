@@ -1,6 +1,7 @@
 package com.example.application.ui.home;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -29,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.application.MainActivity;
 import com.example.application.R;
+import com.example.application.TessOcr;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,6 +46,8 @@ public class HomeFragment extends Fragment {
     private byte[] bytes;
     private ImageView myImage;
     private Bitmap myBitmap;
+    private ProgressDialog mProgressDialog;
+    private TessOcr mTessOCR;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,9 +56,13 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.button);
 
+        String language = "eng";
+        mTessOCR = new TessOcr(getContext(),language);
+
         button = root.findViewById(R.id.button);
         myImage = root.findViewById(R.id.imageView2);
         readImage();
+
 
         homeViewModel.getButtonText().observe(this, new Observer<String>() {
             @Override
@@ -74,21 +82,23 @@ public class HomeFragment extends Fragment {
     }
 
     private void readImage(){
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "ciasteczko");
-        if (mediaStorageDir.exists()) {
+        //File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "ciasteczko");
+        //if (mediaStorageDir.exists()) {
             try {
-                final File file = new File(mediaStorageDir, "/pic.jpg");
+                //final File file = new File(mediaStorageDir, "/pic.jpg");
+                final File file = new File(getContext().getFilesDir(), "/pic.jpg");
                 FileInputStream input = new FileInputStream(file);
                 int size = (int) file.length();
                 bytes = new byte[size];
                 input.read(bytes, 0, size);
                 if(isStoragePermissionGranted()){
-                    myBitmap = BitmapFactory.decodeFile("/storage/emulated/0/ciasteczko/pic.jpg");
+                    myBitmap = BitmapFactory.decodeFile(file.getPath());
                     Matrix matrix = new Matrix();
                     matrix.postRotate(90.0f);
                     Bitmap rotatedBitmap = Bitmap.createBitmap(myBitmap, 0, 0, myBitmap.getWidth(), myBitmap.getHeight(), matrix, true);
                     myImage.setImageBitmap(rotatedBitmap);
-                    Toast.makeText(getContext(), "setting bitmap", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "setting bitmap", Toast.LENGTH_LONG).show();
+                    doOCR(rotatedBitmap);
                 }
 
             } catch (FileNotFoundException e) {
@@ -96,7 +106,33 @@ public class HomeFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        //}
+    }
+
+    private void doOCR(final Bitmap bitmap) {
+        /*if (mProgressDialog == null) {
+            mProgressDialog = ProgressDialog.show(getContext(), "Processing",
+                    "Doing OCR...", true);
+        } else {
+            mProgressDialog.show();
+        }*/
+        final String srcText = mTessOCR.getOCRResult(bitmap);
+        Toast.makeText(getContext(), srcText, Toast.LENGTH_LONG).show();
+        /*new Thread(new Runnable() {
+            public void run() {
+                final String srcText = mTessOCR.getOCRResult(bitmap);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (srcText != null && !srcText.equals("")) {
+                            ocrText.setText(srcText);
+                        }
+                        mProgressDialog.dismiss();
+                    }
+                });
+            }
+        }).start();*/
     }
 
     public  boolean isStoragePermissionGranted() {

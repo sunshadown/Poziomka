@@ -180,12 +180,13 @@ public class MainActivity extends AppCompatActivity {
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
 
             File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "ciasteczko");
+
             if (!mediaStorageDir.exists()) {
                 if (!mediaStorageDir.mkdirs()) {
                     Log.d("App", "failed to create directory");
                 }
             }
-            final File file = new File(mediaStorageDir, "/pic.jpg");
+            final File file = new File(getApplicationContext().getFilesDir(), "/pic.jpg");
 
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
