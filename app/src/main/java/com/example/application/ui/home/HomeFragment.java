@@ -11,6 +11,8 @@ import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private Button button;
+    private TextView ocr_text;
     private byte[] bytes;
     private ImageView myImage;
     private Bitmap myBitmap;
@@ -59,6 +62,7 @@ public class HomeFragment extends Fragment {
         String language = "eng";
         mTessOCR = new TessOcr(getContext(),language);
 
+        ocr_text = root.findViewById(R.id.ocr_text);
         button = root.findViewById(R.id.button);
         myImage = root.findViewById(R.id.imageView2);
         readImage();
@@ -75,6 +79,13 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        homeViewModel.getOCRtext().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                ocr_text.setText(s);
             }
         });
 
@@ -109,31 +120,34 @@ public class HomeFragment extends Fragment {
         //}
     }
 
+
     private void doOCR(final Bitmap bitmap) {
-        /*if (mProgressDialog == null) {
+        if (mProgressDialog == null) {
             mProgressDialog = ProgressDialog.show(getContext(), "Processing",
                     "Doing OCR...", true);
         } else {
             mProgressDialog.show();
-        }*/
+        }
         final String srcText = mTessOCR.getOCRResult(bitmap);
-        Toast.makeText(getContext(), srcText, Toast.LENGTH_LONG).show();
-        /*new Thread(new Runnable() {
+
+        new Thread(new Runnable() {
             public void run() {
                 final String srcText = mTessOCR.getOCRResult(bitmap);
-                runOnUiThread(new Runnable() {
+                myImage.post(new Runnable() {
                     @Override
                     public void run() {
 
                         if (srcText != null && !srcText.equals("")) {
-                            ocrText.setText(srcText);
+                            Toast.makeText(getContext(), srcText, Toast.LENGTH_LONG).show();
+                            ocr_text.setText(srcText);
                         }
                         mProgressDialog.dismiss();
                     }
                 });
             }
-        }).start();*/
+        }).start();
     }
+
 
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {

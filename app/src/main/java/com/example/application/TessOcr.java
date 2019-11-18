@@ -55,7 +55,7 @@ public class TessOcr {
                 try {
                     if (inFile != null) inFile.close();
                     mTess.init(dstInitPathDir, lang);
-                    Toast.makeText(context, "tesseract init", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "tesseract init", Toast.LENGTH_SHORT).show();
                     return;
 
                 } catch (Exception ex) {
@@ -75,7 +75,7 @@ public class TessOcr {
                     inFile.close();
                     outFile.close();
                     mTess.init(dstInitPathDir, lang);
-                    Toast.makeText(context, "tesseract init", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "tesseract init", Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     Log.e(TAG, ex.getMessage());
                     Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();

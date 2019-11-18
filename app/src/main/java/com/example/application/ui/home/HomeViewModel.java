@@ -8,10 +8,14 @@ public class HomeViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
     private MutableLiveData<String> button_text;
+    private MutableLiveData<String> ocr_text;
 
     public HomeViewModel() {
         mText = new MutableLiveData<>();
         button_text = new MutableLiveData<>();
+        ocr_text = new MutableLiveData<>();
+
+        ocr_text.setValue("None");
         mText.setValue("This is home fragment");
         button_text.setValue("Take Image");
     }
@@ -23,4 +27,6 @@ public class HomeViewModel extends ViewModel {
     public LiveData<String> getButtonText(){
         return button_text;
     }
+
+    public LiveData<String> getOCRtext(){return ocr_text;}
 }
