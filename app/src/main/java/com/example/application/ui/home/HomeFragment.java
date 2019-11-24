@@ -46,6 +46,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private Button button;
     private TextView ocr_text;
+    private TextView take_image_text;
     private byte[] bytes;
     private ImageView myImage;
     private Bitmap myBitmap;
@@ -64,16 +65,17 @@ public class HomeFragment extends Fragment {
 
         ocr_text = root.findViewById(R.id.ocr_text);
         button = root.findViewById(R.id.button);
+        take_image_text = root.findViewById(R.id.take_image);
         myImage = root.findViewById(R.id.imageView2);
         readImage();
 
 
-        homeViewModel.getButtonText().observe(this, new Observer<String>() {
+        /*homeViewModel.getButtonText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });
+        });*/
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +88,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 ocr_text.setText(s);
+            }
+        });
+
+        homeViewModel.getButtonText().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                take_image_text.setText(s);
             }
         });
 

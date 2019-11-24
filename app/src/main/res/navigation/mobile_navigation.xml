@@ -12,15 +12,15 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.application.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_secret"
+        android:name="com.example.application.ui.secret.SecretFragment"
+        android:label="@string/menu_secret_generator"
+        tools:layout="@layout/fragment_secret" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.application.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_merger"
+        android:name="com.example.application.ui.merger.MergerFragment"
+        android:label="@string/menu_secret_merger"
+        tools:layout="@layout/fragment_merger" />
 
 </navigation>

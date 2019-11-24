@@ -1,4 +1,4 @@
-package com.example.application.ui.gallery;
+package com.example.application.ui.secret;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.application.R;
 
-public class GalleryFragment extends Fragment {
+public class SecretFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private SecretViewModel secretViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        secretViewModel =
+                ViewModelProviders.of(this).get(SecretViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_secret, container, false);
         final TextView textView = root.findViewById(R.id.text_gallery);
-        galleryViewModel.getText().observe(this, new Observer<String>() {
+        secretViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
