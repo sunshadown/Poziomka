@@ -23,13 +23,7 @@ public class MergerFragment extends Fragment {
         mergerViewModel =
                 ViewModelProviders.of(this).get(MergerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_merger, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        mergerViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
         return root;
     }
 }
