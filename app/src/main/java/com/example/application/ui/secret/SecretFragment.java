@@ -47,11 +47,12 @@ public class SecretFragment extends Fragment {
         generate_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DisplayPass();
                 String seq = GenerateSequence();
-                Toast.makeText(getContext(), seq,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "seq: " + seq +" length:" + seq.length(),Toast.LENGTH_SHORT).show();
                 String shadow = GenerateShadow(password_texview.getText().toString(), seq);
-                Toast.makeText(getContext(), shadow,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "shadow: "+shadow + " length:" + shadow.length(),Toast.LENGTH_SHORT).show();
+                String val = GenerateShadow(shadow, seq);
+                Toast.makeText(getContext(),"val: "+val + " length:" + val.length() ,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -85,11 +86,14 @@ public class SecretFragment extends Fragment {
 
         if (pass_length < length){
             for (int i = pass_length; i < length; i++) {
-                pass+= 0;
+                pass+= '0';
             }
         }
+
         for (int i = 0; i < 12; i++) {
-            int t = Character.getNumericValue(pass.charAt(i)) ^ Character.getNumericValue(seq.charAt(i));
+            char l = pass.charAt(i);
+            char k = seq.charAt(i);
+            char t = (char)(l ^ k);
             output += (char)t;
         }
         return output;
