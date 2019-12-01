@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment {
                     public void run() {
 
                         if (srcText != null && !srcText.equals("")) {
-                            Toast.makeText(getContext(), srcText, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), srcText, Toast.LENGTH_LONG).show();
                             ocr_text.setText(srcText);
                         }
                         mProgressDialog.dismiss();
