@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.application.BuildConfig;
 import com.example.application.R;
 
@@ -49,9 +50,9 @@ import java.util.Date;
 public class SecretFragment extends Fragment {
 
     private SecretViewModel secretViewModel;
-    private Button generate_button;
-    private Button share_s1;
-    private Button share_s2;
+    private LottieAnimationView generate_button;
+    private LottieAnimationView share_s1;
+    private LottieAnimationView share_s2;
     private TextView password_texview;
     private TextView shadow1;
     private TextView shadow2;
@@ -69,12 +70,6 @@ public class SecretFragment extends Fragment {
         shadow2.setText("Shadow_2: ");
 
         generate_button = root.findViewById(R.id.generate_shadows);
-        secretViewModel.getmGenerateText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                generate_button.setText(s);
-            }
-        });
 
         password_texview = root.findViewById(R.id.password);
         secretViewModel.getmPasswordText().observe(this, new Observer<String>() {
