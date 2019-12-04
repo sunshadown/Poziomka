@@ -173,7 +173,7 @@ public class SecretFragment extends Fragment {
         String output = new String();
         //int max = 65535;
         int max = 122;
-        int min = 33;
+        int min = 48;
         final int length = 12;
         for (int i = 0; i < length; i++) {
             char t = (char) Math.floor((Math.random() * ((max - min) + 1)) + min);

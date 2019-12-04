@@ -1,6 +1,7 @@
 package com.example.application.ui.merger;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,10 +28,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.application.BuildConfig;
 import com.example.application.R;
+import com.example.application.TessOcr;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,9 +44,15 @@ import 	java.io.BufferedReader;
 public class MergerFragment extends Fragment {
 
     private MergerViewModel mergerViewModel;
+    private LottieAnimationView lottieAnimationView;
     private final int pickimage_code = 1;
     private final int picktxt_code = 2;
+    private ProgressDialog mProgressDialog;
+    private TessOcr mTessOCR;
+    private String ocr_text;
+    private TextView merge_password;
     private ImageView s1;
+    private Bitmap s1_bitmap;
     private TextView s2;
     private Switch legacy_switch;
     private boolean switch_state = true;
@@ -52,6 +62,19 @@ public class MergerFragment extends Fragment {
         mergerViewModel =
                 ViewModelProviders.of(this).get(MergerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_merger, container, false);
+
+        merge_password = root.findViewById(R.id.merge_password);
+
+        lottieAnimationView = root.findViewById(R.id.merger_lottie);
+        lottieAnimationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(s1_bitmap == null){
+                    return;
+                }
+                doOCR(s1_bitmap);
+            }
+        });
 
         s2 = root.findViewById(R.id.merger_s2);
         s2.setOnClickListener(new View.OnClickListener() {
@@ -85,9 +108,62 @@ public class MergerFragment extends Fragment {
             }
         });
 
+        String language = "eng";
+        mTessOCR = new TessOcr(getContext(),language);
 
         return root;
     }
+
+    private void doOCR(final Bitmap bitmap) {
+        if (mProgressDialog == null) {
+            mProgressDialog = ProgressDialog.show(getContext(), "Processing",
+                    "Doing OCR...", true);
+        } else {
+            mProgressDialog.show();
+        }
+        final String srcText = mTessOCR.getOCRResult(bitmap);
+        ocr_text = "";
+
+        new Thread(new Runnable() {
+            public void run() {
+                final String srcText = mTessOCR.getOCRResult(bitmap);
+                s1.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (srcText != null && !srcText.equals("")) {
+                            ocr_text = srcText;
+                            String haslo = GenerateShadow(ocr_text, (String) s2.getText());
+                            merge_password.setText(haslo);
+                        }
+                        mProgressDialog.dismiss();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private String GenerateShadow(String pass, String seq)
+    {
+        String output = new String();
+        final int length = 12;
+        final int pass_length = pass.length();
+
+        if (pass_length < length){
+            for (int i = pass_length; i < length; i++) {
+                pass+= '0';
+            }
+        }
+
+        for (int i = 0; i < 12; i++) {
+            char l = pass.charAt(i);
+            char k = seq.charAt(i);
+            char t = (char)(l ^ k);
+            output += (char)t;
+        }
+        return output;
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,7 +177,15 @@ public class MergerFragment extends Fragment {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             Uri uri = data.getData();
-            s1.setImageURI(uri);
+            //s1.setImageURI(uri);
+            try {
+                FileInputStream input = new FileInputStream(getContext().getContentResolver().openFileDescriptor(uri,"r").getFileDescriptor());
+                s1_bitmap = BitmapFactory.decodeStream(input);
+                s1.setImageBitmap(s1_bitmap);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         if (requestCode == picktxt_code && resultCode == Activity.RESULT_OK) {
@@ -117,7 +201,6 @@ public class MergerFragment extends Fragment {
                     total.append(line);//.append('\n');
                 }
                 String datastring = total.toString();
-                //Toast.makeText(getContext(),datastring,Toast.LENGTH_SHORT).show();
                 s2.setText(datastring);
             } catch (IOException e) {
                 e.printStackTrace();
