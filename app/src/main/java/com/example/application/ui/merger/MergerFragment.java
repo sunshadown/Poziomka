@@ -133,6 +133,7 @@ public class MergerFragment extends Fragment {
 
                         if (srcText != null && !srcText.equals("")) {
                             ocr_text = srcText;
+                            //Toast.makeText(getContext(), ocr_text, Toast.LENGTH_SHORT).show();
                             String haslo = GenerateShadow(ocr_text, (String) s2.getText());
                             merge_password.setText(haslo);
                         }
@@ -146,22 +147,30 @@ public class MergerFragment extends Fragment {
     private String GenerateShadow(String pass, String seq)
     {
         String output = new String();
-        final int length = 12;
+        final int length = 12 + 1;
         final int pass_length = pass.length();
 
-        if (pass_length < length){
-            for (int i = pass_length; i < length; i++) {
-                pass+= '0';
-            }
+        if (pass_length < length || seq.length() < length){
+            Toast.makeText(getContext(), "Wrong lengths(s1,s2): " + pass + " " + pass_length + " " + seq.length(), Toast.LENGTH_SHORT).show();
+            return "";
+            //todo drop app
         }
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < length; i++) {
             char l = pass.charAt(i);
             char k = seq.charAt(i);
             char t = (char)(l ^ k);
             output += (char)t;
         }
-        return output;
+        int genpass_len = output.charAt(length - 1);
+        if(genpass_len == 0){
+            return "";
+        }
+        if(genpass_len == 12){
+            return  output;
+        }
+        String outdata = output.substring(0,genpass_len);
+        return outdata;
     }
 
 

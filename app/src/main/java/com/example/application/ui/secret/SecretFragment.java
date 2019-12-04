@@ -175,7 +175,7 @@ public class SecretFragment extends Fragment {
         int max = 122;
         int min = 48;
         final int length = 12;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length + 1; i++) {
             char t = (char) Math.floor((Math.random() * ((max - min) + 1)) + min);
             output += t;
         }
@@ -193,8 +193,9 @@ public class SecretFragment extends Fragment {
                 pass+= '0';
             }
         }
+        pass += (char)(pass_length);
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < length + 1; i++) {
             char l = pass.charAt(i);
             char k = seq.charAt(i);
             char t = (char)(l ^ k);
