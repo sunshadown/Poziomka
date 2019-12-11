@@ -108,59 +108,67 @@ public class SecretFragment extends Fragment {
                 if(password_texview.getText().length() == 0){
                     return;
                 }
-                String seq = GenerateSequence();
-                //Toast.makeText(getContext(), "seq: " + seq +" length:" + seq.length(),Toast.LENGTH_SHORT).show();
-                String shadow = GenerateShadow(password_texview.getText().toString(), seq);
-                //Toast.makeText(getContext(), "shadow: "+shadow + " length:" + shadow.length(),Toast.LENGTH_SHORT).show();
-                //String val = GenerateShadow(shadow, seq);
-                //Toast.makeText(getContext(),"val: "+val + " length:" + val.length() ,Toast.LENGTH_SHORT).show();
-                shadow1.setText("Shadow_1: " + seq);
-                shadow2.setText("Shadow_2: " + shadow);
-                File file = new File(getContext().getFilesDir(),"shadows");
-                if(!file.exists())
-                {
-                    file.mkdirs();
-                }
-                OutputStream output = null;
-                File shadow1_file = new File(file, "/shadow1.jpg");
-                File shadow2_file = new File(file,"/shadow2.txt");
-                StringBuilder text = new StringBuilder();
-                try {
-                    output = new FileOutputStream(shadow2_file);
-                    output.write(shadow.getBytes());
-                    BufferedReader br = new BufferedReader(new FileReader(shadow2_file));
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        text.append(line);
-                        //text.append('\n');
-                    }
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (null != output) {
-                        try {
-                            output.close();
-                            String result = text.toString();
-                            Toast.makeText(getContext(),result + " len:" + result.length(),Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                Bitmap bitmap = CreateBitmap();
-                Canvas canvas=new Canvas(bitmap);
-                Paint paint = new Paint();
-                paint.setColor(Color.BLACK); // Text Color
-                paint.setTextSize(78); // Text Size
-                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
-                canvas.drawBitmap(bitmap, 0, 0, paint);
-                canvas.drawText(seq, 180, 300, paint);
-                SaveBitmap(bitmap);
+
+                Generate();
             }
         });
 
         return root;
+    }
+
+    private void Generate(){
+        String seq = GenerateSequence();
+        //Toast.makeText(getContext(), "seq: " + seq +" length:" + seq.length(),Toast.LENGTH_SHORT).show();
+        String shadow = GenerateShadow(password_texview.getText().toString(), seq);
+        //Toast.makeText(getContext(), "shadow: "+shadow + " length:" + shadow.length(),Toast.LENGTH_SHORT).show();
+        //String val = GenerateShadow(shadow, seq);
+        //Toast.makeText(getContext(),"val: "+val + " length:" + val.length() ,Toast.LENGTH_SHORT).show();
+
+        File file = new File(getContext().getFilesDir(),"shadows");
+        if(!file.exists())
+        {
+            file.mkdirs();
+        }
+        OutputStream output = null;
+        File shadow1_file = new File(file, "/shadow1.jpg");
+        File shadow2_file = new File(file,"/shadow2.txt");
+        StringBuilder text = new StringBuilder();
+        try {
+            output = new FileOutputStream(shadow2_file);
+            output.write(shadow.getBytes());
+            BufferedReader br = new BufferedReader(new FileReader(shadow2_file));
+            String line;
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                //text.append('\n');
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != output) {
+                try {
+                    output.close();
+                    String result = text.toString();
+                    Toast.makeText(getContext(),result + " len:" + result.length(),Toast.LENGTH_SHORT).show();
+                    if(result.length() < 13)Generate();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        shadow1.setText("Shadow_1: " + seq);
+        shadow2.setText("Shadow_2: " + shadow);
+
+        Bitmap bitmap = CreateBitmap();
+        Canvas canvas=new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK); // Text Color
+        paint.setTextSize(78); // Text Size
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        canvas.drawBitmap(bitmap, 0, 0, paint);
+        canvas.drawText(seq, 180, 300, paint);
+        SaveBitmap(bitmap);
     }
 
     private void DisplayPass()
