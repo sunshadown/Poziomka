@@ -157,17 +157,17 @@ public class SecretFragment extends Fragment {
                 }
             }
         }
-        shadow1.setText("Shadow_1: " + seq);
+        shadow1.setText("Shadow_1: " + GenerateOcrString(seq));
         shadow2.setText("Shadow_2: " + shadow);
 
         Bitmap bitmap = CreateBitmap();
         Canvas canvas=new Canvas(bitmap);
         Paint paint = new Paint();
         paint.setColor(Color.BLACK); // Text Color
-        paint.setTextSize(78); // Text Size
+        paint.setTextSize(32); // Text Size
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
         canvas.drawBitmap(bitmap, 0, 0, paint);
-        canvas.drawText(seq, 180, 300, paint);
+        canvas.drawText(GenerateOcrString(seq), 80, 300, paint);
         SaveBitmap(bitmap);
     }
 
@@ -179,12 +179,22 @@ public class SecretFragment extends Fragment {
     private String GenerateSequence()
     {
         String output = new String();
+        String codedoutput = new String();
         //int max = 65535;
         int max = 122;
         int min = 48;
         final int length = 12;
         for (int i = 0; i < length + 1; i++) {
             char t = (char) Math.floor((Math.random() * ((max - min) + 1)) + min);
+            Integer k = new Integer(t);
+            String kstr = k.toString();
+            String ostr = new String();
+            if( t < 100){
+                ostr += "0";
+            }
+            ostr += kstr;
+
+            codedoutput += ostr;
             output += t;
         }
         return output;
@@ -210,6 +220,24 @@ public class SecretFragment extends Fragment {
             output += (char)t;
         }
         return output;
+    }
+
+    private String GenerateOcrString(String seq){
+        String codedoutput = new String();
+        final int length = 12;
+        for (int i = 0; i < length + 1; i++) {
+            char t = seq.charAt(i);
+            Integer k = new Integer(t);
+            String kstr = k.toString();
+            String ostr = new String();
+            if( t < 100){
+                ostr += "0";
+            }
+            ostr += kstr;
+
+            codedoutput += ostr;
+        }
+        return codedoutput;
     }
 
     private Bitmap CreateBitmap(){

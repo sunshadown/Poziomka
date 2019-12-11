@@ -9,8 +9,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,8 +135,10 @@ public class MergerFragment extends Fragment {
 
                         if (srcText != null && !srcText.equals("")) {
                             ocr_text = srcText;
-                            //Toast.makeText(getContext(), ocr_text, Toast.LENGTH_SHORT).show();
-                            String haslo = GenerateShadow(ocr_text, (String) s2.getText());
+                            Toast.makeText(getContext(), ocr_text + ", " + ocr_text.length(), Toast.LENGTH_SHORT).show();
+                            String decoded = DecodeOcrStream(ocr_text);
+                            Toast.makeText(getContext(), decoded + ", " + decoded.length(), Toast.LENGTH_SHORT).show();
+                            String haslo = GenerateShadow(decoded, (String) s2.getText());
                             merge_password.setText(haslo);
                         }
                         mProgressDialog.dismiss();
@@ -142,6 +146,32 @@ public class MergerFragment extends Fragment {
                 });
             }
         }).start();
+    }
+
+    private String DecodeOcrStream(String ocrstr){
+        if(ocrstr.length() < 13 * 3){
+            Toast.makeText(getContext(), "Wrong ocrstr size" + ", size: " + ocrstr.length(), Toast.LENGTH_SHORT).show();
+            return "";
+        }
+        Log.e("ocr",ocrstr);
+        final int length = 12;
+        String ocrdecoded = new String();
+        for (int i = 0; i < 13*3; i+= 3) {
+            char t1 = ocr_text.charAt(i);
+            char t2 = ocr_text.charAt(i + 1);
+            char t3 = ocr_text.charAt(i + 2);
+            String tstring = new String();
+            tstring += t1;
+            tstring += t2;
+            tstring += t3;
+            Log.e("ocr_string",tstring);
+
+            char t = (char) (Integer.parseInt(tstring));
+            Log.e("ocr_char", String.valueOf(t));
+
+            ocrdecoded += t;
+        }
+        return ocrdecoded;
     }
 
     private String GenerateShadow(String pass, String seq)
