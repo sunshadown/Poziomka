@@ -54,6 +54,8 @@ public class SecretFragment extends Fragment {
     private LottieAnimationView share_s1;
     private LottieAnimationView share_s2;
     private TextView password_texview;
+    private String ocr_text = new String();
+    private Boolean shadow_length_flag = false;
     private TextView shadow1;
     private TextView shadow2;
 
@@ -120,6 +122,7 @@ public class SecretFragment extends Fragment {
         String seq = GenerateSequence();
         //Toast.makeText(getContext(), "seq: " + seq +" length:" + seq.length(),Toast.LENGTH_SHORT).show();
         String shadow = GenerateShadow(password_texview.getText().toString(), seq);
+        GenerateOcrString(seq);
         //Toast.makeText(getContext(), "shadow: "+shadow + " length:" + shadow.length(),Toast.LENGTH_SHORT).show();
         //String val = GenerateShadow(shadow, seq);
         //Toast.makeText(getContext(),"val: "+val + " length:" + val.length() ,Toast.LENGTH_SHORT).show();
@@ -151,13 +154,17 @@ public class SecretFragment extends Fragment {
                     output.close();
                     String result = text.toString();
                     Toast.makeText(getContext(),result + " len:" + result.length(),Toast.LENGTH_SHORT).show();
-                    if(result.length() < 13)Generate();
+                    if(result.length() < 13){
+                        Generate();
+                        return;
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
-        shadow1.setText("Shadow_1: " + GenerateOcrString(seq));
+
+        shadow1.setText("Shadow_1: " + ocr_text);
         shadow2.setText("Shadow_2: " + shadow);
 
         Bitmap bitmap = CreateBitmap();
@@ -186,15 +193,6 @@ public class SecretFragment extends Fragment {
         final int length = 12;
         for (int i = 0; i < length + 1; i++) {
             char t = (char) Math.floor((Math.random() * ((max - min) + 1)) + min);
-            Integer k = new Integer(t);
-            String kstr = k.toString();
-            String ostr = new String();
-            if( t < 100){
-                ostr += "0";
-            }
-            ostr += kstr;
-
-            codedoutput += ostr;
             output += t;
         }
         return output;
@@ -237,6 +235,7 @@ public class SecretFragment extends Fragment {
 
             codedoutput += ostr;
         }
+        ocr_text = codedoutput;
         return codedoutput;
     }
 
